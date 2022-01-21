@@ -375,7 +375,7 @@ dat_all%>%
   mutate(rsicat =relevel(rsicat,ref = "Not RSI"),
          sector2 = ordered(sector2, levels = c('Public 4 Year','Private 4 Year','Public 2 Year', 'Private 2 Year' )))%>%
   #         rsi_cat = ifelse(sc_score <mu, "NonRSI", ifelse(sc_score>=mu+sds, "High RSI", "Non_RSI")))%>%
-  filter(rsicat %in% c( "Non-RSI","RSI"))%>%
+  #filter(rsicat %in% c( "Non-RSI","RSI"))%>%
   group_by(rsicat, sector2)%>%
   summarize(p1 = mean(pctenrwh, na.rm=T),
             p2 = mean(pctenrhs, na.rm=T),
@@ -391,9 +391,11 @@ dat_all%>%
                              'p5' = 'Asian/Pacific Islander';
                              'p6'='2 or More Races'", as.factor=T)), width = 10) %>%
   mutate( name2 = ordered(name2,levels = c('White','Hispanic','Black', 'Native American/AK Native', 'Asian/Pacific Islander', '2 or More Races' )))%>%
-  mutate(lab = paste(sector2,rsicat,  sep = "\n"))%>%
+  mutate(lab = factor(paste(rsicat,sector2,  sep = "\n")))%>%
+  mutate(lab = ordered(lab, levels = c("RSI\nPublic 4 Year","Not RSI\nPublic 4 Year","RSI\nPrivate 4 Year" ,"Not RSI\nPrivate 4 Year","Not RSI\nPublic 2 Year","RSI\nPublic 2 Year", "RSI\nPrivate 2 Year", "Not RSI\nPrivate 2 Year"  )))%>%
   ggplot()+
-  geom_col(aes(x=lab,y=value,
+  geom_col(aes(x=lab,
+               y=value,
                group=name2,
                fill=name2),
            position="dodge")+
@@ -444,7 +446,8 @@ dat_all%>%
                              'p5' = 'Asian/Pacific Islander';
                              'p6'='2 or More Races'", as.factor=T)), width = 10) %>%
   mutate( name2 = ordered(name2,levels = c('White','Hispanic','Black', 'Native American/AK Native', 'Asian/Pacific Islander', '2 or More Races' )))%>%
-  mutate(lab = paste(sector2,rsicat,  sep = "\n"))%>%
+  mutate(lab = factor(paste(rsicat,sector2,  sep = "\n")))%>%
+  mutate(lab = ordered(lab, levels = c( "RSI\nPublic 4 Year","High RSI\nPublic 4 Year", "RSI\nPrivate 4 Year" ,"High RSI\nPrivate 4 Year","RSI\nPublic 2 Year","High RSI\nPublic 2 Year", "RSI\nPrivate 2 Year" ,"High RSI\nPrivate 2 Year" )))%>%
   ggplot()+
   geom_col(aes(x=lab,y=value,
                group=name2,
